@@ -270,6 +270,30 @@ predict.SVMClassifier <- function(object, X, values = FALSE, ...) {
   }
   return(decf)
 }
+#' Predict Method for Support Vector Regression
+#'
+#' @param object a fitted object of class inheriting from \code{SVMRegressor}.
+#' @param X new data for predicting.
+#' @param ... unused parameter.
+#' @importFrom stats predict
+#' @export
+predict.SVMRegressor <- function(object, X, ...) {
+  X <- as.matrix(X)
+  if (object$fit_intercept == TRUE) {
+    X <- cbind(X, 1)
+  }
+  if (object$kernel == "linear" & object$solver == "primal") {
+    KernelX <- X
+  } else {
+    KernelX <- kernel_function(X, object$X,
+                               kernel.type = object$kernel,
+                               gamma = object$gamma,
+                               degree = object$degree,
+                               coef0 = object$coef0)
+  }
+  pred <- KernelX %*% object$coef
+  return(pred)
+}
 
 #' K-Fold Cross Validation with Noisy 
 #'

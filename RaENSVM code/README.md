@@ -1,6 +1,6 @@
 # RaENSVM
 
-This directory provides the R implementation and usage examples for the rescaled asymmetric elastic-net support vector machine (RaENSVM).
+This directory provides the R implementation and usage examples for the Rescaled asymmetric Elastic Net Support Vector Machine (RaENSVM).
 
 ## Repository scope
 

@@ -1,5 +1,5 @@
-###Three example for how to use RaENSVM
-###example 1: Use it directly without invoking cross validation
+# Three examples of using RaENSVM
+# Example 1: Direct model fitting without cross-validation
 library(ggplot2)
 library(mvtnorm)
 library(foreach)
@@ -9,7 +9,7 @@ source("Cross Validation function.R")
 source("Metric.R")
 source("RaENSVM.R")
 source("gg.R")
-#Generate date
+# Generate data
 set.seed(123)
 mean = c(0.8,0.8)
 sigma = matrix(c(0.15,0,0,0.15),2,2)
@@ -19,18 +19,18 @@ x2 = rmvnorm(n = 80,mean,sigma)
 x = rbind(x1,x2)
 y = c(rep(-1,80),rep(1,80))
 
-#Add Label Noise
+# Add label-noise points
 outnoise =  matrix(c(1.3, 1.4, 1.5, -0.3, -0.1, -0.3), ncol = 2)
 x = rbind(x,outnoise)
 y = c(y,c(1,1,1))
 data <- data.frame(x, y)
 
-#Bayesian decision boundary:
-#fc = ln(p(y1))-ln(p(y2))+t((m1-m2))C(-1)*%*%x-1/2*t(m1)%*%solve(C)%*%m1+1/2*t(m2)%*%solve(C)%*%m2
+# Bayes decision boundary
+# fc = ln(p(y1))-ln(p(y2))+t((m1-m2))C(-1)*%*%x-1/2*t(m1)%*%solve(C)%*%m1+1/2*t(m2)%*%solve(C)%*%m2
 slope = -1; intercept = 0; seed = 1234; k = 1
-#Parameter setting
+# Parameter settings
 C = 2^0; tau = 0.1; eta = 2; theta = 1
-#Model solving
+# Fit the model
 raen <- raen_svm(x, y, C = C, eta = eta, tau = tau, theta = theta, solver = "primal",kernel = "linear", max.steps = 5)
 res <- predict(raen, x);table(res,y)
 
@@ -43,7 +43,7 @@ p = ggplot(data = data,mapping = aes(x = x[,1],y = x[,2],shape = as.factor(y),co
 (p = gg(p))
 
 
-###example 2: Call cross-validation for parameter tuning
+# Example 2: Hyperparameter selection by cross-validation
 Affdu <- read.csv("Algerian_forest_fires_dataset_UPDATE.csv",header = T,sep = ",")
 X <- Affdu[, -ncol(Affdu)]
 X = scale(X,center = T,scale = T)
@@ -58,7 +58,7 @@ res <- grid_search_cv(raen_svm, X, y, 5, metrics = metrics, param_list = param_l
                        solver = "primal", sample_seed = 123)
 print(res)
 
-#Cross validation with noise
+# Cross-validation under label noise
 noisy_label_generator <- function(y, p, seed = NULL){
   if (is.null(seed) == FALSE) {
     set.seed(seed)
@@ -87,7 +87,7 @@ res <- grid_search_cv_noisy(raen_svm, X, y, y_noisy, 5, metrics = metrics, param
 print(res)
 
 
-###example 3: Using Gaussian kernel functions
+# Example 3: Gaussian-kernel RaENSVM
 gamma <- 2^seq(-4, 4); 
 param_list <- list("C" = C, "gamma" = gamma, "eta" = eta, "tau" = tau, "theta" = theta)
 res <- grid_search_cv_noisy(raen_svm, X, y, y_noisy, 5, metrics = metrics, param_list = param_list,

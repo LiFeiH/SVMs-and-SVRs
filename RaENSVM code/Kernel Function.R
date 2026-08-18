@@ -54,9 +54,8 @@ kernel_function <- function(x1, x2, kernel.type = c('linear', 'rbf', 'poly'),
   }
   return(K)
 }
-
 kernel_select_option <- function(X, kernel, solver, randx,
-                                 gamma, degree, coef0, rcpp) {
+                                 gamma, degree, coef0, ...) {
   n <- nrow(X)
   if (kernel == "linear" & solver == "primal") {
     KernelX <- X

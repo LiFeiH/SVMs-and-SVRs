@@ -1,10 +1,14 @@
 ###Three example for how to use RaENSVM
 ###example 1: Use it directly without invoking cross validation
-library(MASS)
 library(ggplot2)
-library("mvtnorm")
-source("gg.R")
+library(mvtnorm)
+library(foreach)
+
+source("Kernel Function.R")
+source("Cross Validation function.R")
+source("Metric.R")
 source("RaENSVM.R")
+source("gg.R")
 #Generate date
 set.seed(123)
 mean = c(0.8,0.8)
@@ -40,10 +44,6 @@ p = ggplot(data = data,mapping = aes(x = x[,1],y = x[,2],shape = as.factor(y),co
 
 
 ###example 2: Call cross-validation for parameter tuning
-source("Metric.R")
-library("foreach")
-source("Kernel Function.R")
-source("Cross Validation function.R")
 Affdu <- read.csv("Algerian_forest_fires_dataset_UPDATE.csv",header = T,sep = ",")
 X <- Affdu[, -ncol(Affdu)]
 X = scale(X,center = T,scale = T)

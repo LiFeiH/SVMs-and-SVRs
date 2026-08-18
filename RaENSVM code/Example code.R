@@ -49,7 +49,7 @@ X <- Affdu[, -ncol(Affdu)]
 X = scale(X,center = T,scale = T)
 y <- Affdu[, ncol(Affdu)]
 
-#parameter setting
+# parameter setting
 C <- 2^(-8:8); gamma <- 1; theta = c(0, 0.1, 0.5, 1); eta <- c(0.2,0.5,1,2,3); tau <- c(0, 0.1, 0.2, 0.5, 1)
 metrics <- list("acc" = accuracy, "f1score" = f1score, "recall" = recall,"precision" = precision)
 param_list <- list("C" = C, "gamma" = gamma, "eta" = eta, "tau" = tau, "theta" = theta)
